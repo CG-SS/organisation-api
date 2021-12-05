@@ -3,10 +3,10 @@ package organisation_api
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"path"
-	"strconv"
 )
 
 const accountsPath = "accounts"
@@ -42,6 +42,8 @@ func (c *OrganisationApiClient) CreateAccount(data AccountData) (*AccountData, e
 func (c *OrganisationApiClient) FetchAccount(id string) (*AccountData, error) {
 	requestUrl, err := buildAccountsUrl(c)
 
+	logMsg(c.ClientConfig.InfoLog, "Fetching msg", id)
+
 	if err != nil {
 		logMsg(c.ClientConfig.ErrorLog, err.Error())
 		return nil, err
@@ -54,6 +56,11 @@ func (c *OrganisationApiClient) FetchAccount(id string) (*AccountData, error) {
 	if err != nil {
 		logMsg(c.ClientConfig.ErrorLog, err.Error())
 		return nil, err
+	}
+
+	statusCode := resp.StatusCode
+	if statusCode != http.StatusOK {
+		return nil, errors.New(fmt.Sprintf("Received status code %d!", statusCode))
 	}
 
 	defer closeBody(resp.Body)
@@ -82,10 +89,5 @@ func (c *OrganisationApiClient) DeleteAccount(id string, version int) (bool, err
 		return false, err
 	}
 
-	statusCode, err := strconv.Atoi(resp.Status)
-	if err != nil {
-		return false, err
-	}
-
-	return statusCode == http.StatusNoContent, nil
+	return resp.StatusCode == http.StatusNoContent, nil
 }
