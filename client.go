@@ -1,6 +1,8 @@
 package organisation_api
 
-import "net/http"
+import (
+	"net/http"
+)
 
 type OrganisationApiClient struct {
 	*http.Client
