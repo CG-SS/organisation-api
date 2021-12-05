@@ -19,8 +19,7 @@ func (c *OrganisationApiClient) CreateAccount(data AccountData) (*AccountData, e
 		return nil, err
 	}
 
-	values := map[string]AccountData{"data": data}
-	jsonValue, err := json.Marshal(values)
+	jsonValue, err := json.Marshal(DataHolder{Data: data})
 
 	if err != nil {
 		logMsg(c.ClientConfig.ErrorLog, err.Error())
