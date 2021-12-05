@@ -34,6 +34,11 @@ func (c *OrganisationApiClient) CreateAccount(data AccountData) (*AccountData, e
 		return nil, err
 	}
 
+	statusCode := resp.StatusCode
+	if statusCode != http.StatusOK {
+		return nil, errors.New(fmt.Sprintf("Received status code %d!", statusCode))
+	}
+
 	defer closeBody(resp.Body)
 
 	return fetchAccountDataFromBody(resp)
