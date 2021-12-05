@@ -1,5 +1,9 @@
 package organisation_api
 
+type DataHolder struct {
+	Data AccountData `json:"data,omitempty"`
+}
+
 type AccountData struct {
 	Attributes     *AccountAttributes `json:"attributes,omitempty"`
 	ID             string             `json:"id,omitempty"`
