@@ -1,6 +1,6 @@
 package organisation_api
 
-type DataHolder struct {
+type dataHolder struct {
 	Data AccountData `json:"data,omitempty"`
 }
 
