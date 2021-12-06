@@ -34,13 +34,14 @@ func (c *OrganisationApiClient) CreateAccount(data AccountData) (*AccountData, e
 	}
 
 	statusCode := resp.StatusCode
+	logMsg(c.ClientConfig.DebugLog, "Received status: ", resp.Status)
 	if statusCode != http.StatusCreated {
 		return nil, errors.New(fmt.Sprintf("Received status code %d!", statusCode))
 	}
 
 	defer closeBody(resp.Body)
 
-	return fetchAccountDataFromBody(resp)
+	return fetchAccountDataFromBody(c, resp)
 }
 
 func (c *OrganisationApiClient) FetchAccount(id string) (*AccountData, error) {
@@ -63,13 +64,14 @@ func (c *OrganisationApiClient) FetchAccount(id string) (*AccountData, error) {
 	}
 
 	statusCode := resp.StatusCode
+	logMsg(c.ClientConfig.DebugLog, "Received status: ", resp.Status)
 	if statusCode != http.StatusOK {
 		return nil, errors.New(fmt.Sprintf("Received status code %d!", statusCode))
 	}
 
 	defer closeBody(resp.Body)
 
-	return fetchAccountDataFromBody(resp)
+	return fetchAccountDataFromBody(c, resp)
 }
 
 func (c *OrganisationApiClient) DeleteAccount(id string, version int) (bool, error) {
@@ -92,6 +94,8 @@ func (c *OrganisationApiClient) DeleteAccount(id string, version int) (bool, err
 	if err != nil {
 		return false, err
 	}
+
+	logMsg(c.ClientConfig.DebugLog, "Received status: ", resp.Status)
 
 	return resp.StatusCode == http.StatusNoContent, nil
 }

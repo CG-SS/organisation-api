@@ -7,21 +7,18 @@ import (
 	"net/http"
 	"net/url"
 	"path"
-	"strings"
 )
 
-func logMsg(logger *log.Logger, msg ...string) {
+func logMsg(logger *log.Logger, msg ...interface{}) {
 	if logger != nil {
-		logger.Println(strings.Join(msg, " "))
+		logger.Println(msg...)
 	}
 }
 
 func buildAccountsUrl(c *OrganisationApiClient) (*url.URL, error) {
 	clientRootUrlPath := c.ClientConfig.RootUrl.Path
 
-	if c.ClientConfig.IsDebugEnabled {
-		logMsg(c.ClientConfig.DebugLog, "Joining paths", clientRootUrlPath, "and", accountsPath)
-	}
+	logMsg(c.ClientConfig.DebugLog, "Joining paths", clientRootUrlPath, "and", accountsPath)
 
 	requestUrl, err := url.Parse(path.Join(clientRootUrlPath, accountsPath))
 
@@ -35,10 +32,16 @@ func buildAccountsUrl(c *OrganisationApiClient) (*url.URL, error) {
 	return requestUrl, nil
 }
 
-func fetchAccountDataFromBody(resp *http.Response) (*AccountData, error) {
+func fetchAccountDataFromBody(c *OrganisationApiClient, resp *http.Response) (*AccountData, error) {
 	b, err := io.ReadAll(resp.Body)
+
 	if err != nil {
 		return nil, err
+	}
+
+	if c.ClientConfig.IsDebugEnabled {
+		rawBody := string(b)
+		logMsg(c.ClientConfig.DebugLog, "Received raw msg", rawBody)
 	}
 
 	data := dataHolder{}
@@ -46,6 +49,8 @@ func fetchAccountDataFromBody(resp *http.Response) (*AccountData, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	logMsg(c.ClientConfig.DebugLog, "Unmarshalled data from body", data)
 
 	return &data.Data, nil
 }

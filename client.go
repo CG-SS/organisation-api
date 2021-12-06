@@ -13,6 +13,9 @@ type OrganisationApiClient struct {
 var DefaultClient = &OrganisationApiClient{
 	Client: &http.Client{
 		Timeout: 10 * time.Second,
+		Transport: &http.Transport{
+			TLSHandshakeTimeout: 5 * time.Second,
+		},
 	},
 	ClientConfig: DefaultConfig,
 }
