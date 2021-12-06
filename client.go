@@ -2,6 +2,7 @@ package organisation_api
 
 import (
 	"net/http"
+	"time"
 )
 
 type OrganisationApiClient struct {
@@ -10,7 +11,9 @@ type OrganisationApiClient struct {
 }
 
 var DefaultClient = &OrganisationApiClient{
-	Client:       http.DefaultClient,
+	Client: &http.Client{
+		Timeout: 10 * time.Second,
+	},
 	ClientConfig: DefaultConfig,
 }
 
