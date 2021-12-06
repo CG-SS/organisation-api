@@ -19,7 +19,7 @@ func (c *OrganisationApiClient) CreateAccount(data AccountData) (*AccountData, e
 		return nil, err
 	}
 
-	jsonValue, err := json.Marshal(DataHolder{Data: data})
+	jsonValue, err := json.Marshal(dataHolder{Data: data})
 
 	if err != nil {
 		logMsg(c.ClientConfig.ErrorLog, err.Error())
@@ -34,7 +34,7 @@ func (c *OrganisationApiClient) CreateAccount(data AccountData) (*AccountData, e
 	}
 
 	statusCode := resp.StatusCode
-	if statusCode != http.StatusOK {
+	if statusCode != http.StatusCreated {
 		return nil, errors.New(fmt.Sprintf("Received status code %d!", statusCode))
 	}
 
