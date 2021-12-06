@@ -36,13 +36,18 @@ func buildAccountsUrl(c *OrganisationApiClient) (*url.URL, error) {
 }
 
 func fetchAccountDataFromBody(resp *http.Response) (*AccountData, error) {
-	data := AccountData{}
-	err := json.NewDecoder(resp.Body).Decode(&data)
+	b, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
 
-	return &data, nil
+	data := dataHolder{}
+	err = json.Unmarshal(b, &data)
+	if err != nil {
+		return nil, err
+	}
+
+	return &data.Data, nil
 }
 
 func closeBody(body io.ReadCloser) {

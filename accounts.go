@@ -15,21 +15,21 @@ func (c *OrganisationApiClient) CreateAccount(data AccountData) (*AccountData, e
 	requestUrl, err := buildAccountsUrl(c)
 
 	if err != nil {
-		logMsg(c.ClientConfig.ErrorLog, err.Error())
+		logMsg(c.ClientConfig.DebugLog, err.Error())
 		return nil, err
 	}
 
 	jsonValue, err := json.Marshal(dataHolder{Data: data})
 
 	if err != nil {
-		logMsg(c.ClientConfig.ErrorLog, err.Error())
+		logMsg(c.ClientConfig.DebugLog, err.Error())
 		return nil, err
 	}
 
 	resp, err := c.Post(requestUrl.String(), "application/json", bytes.NewBuffer(jsonValue))
 
 	if err != nil {
-		logMsg(c.ClientConfig.ErrorLog, err.Error())
+		logMsg(c.ClientConfig.DebugLog, err.Error())
 		return nil, err
 	}
 
@@ -46,10 +46,10 @@ func (c *OrganisationApiClient) CreateAccount(data AccountData) (*AccountData, e
 func (c *OrganisationApiClient) FetchAccount(id string) (*AccountData, error) {
 	requestUrl, err := buildAccountsUrl(c)
 
-	logMsg(c.ClientConfig.InfoLog, "Fetching msg", id)
+	logMsg(c.ClientConfig.DebugLog, "Fetching msg", id)
 
 	if err != nil {
-		logMsg(c.ClientConfig.ErrorLog, err.Error())
+		logMsg(c.ClientConfig.DebugLog, err.Error())
 		return nil, err
 	}
 
@@ -58,7 +58,7 @@ func (c *OrganisationApiClient) FetchAccount(id string) (*AccountData, error) {
 	resp, err := c.Get(requestUrl.String())
 
 	if err != nil {
-		logMsg(c.ClientConfig.ErrorLog, err.Error())
+		logMsg(c.ClientConfig.DebugLog, err.Error())
 		return nil, err
 	}
 
@@ -76,7 +76,7 @@ func (c *OrganisationApiClient) DeleteAccount(id string, version int) (bool, err
 	requestUrl, err := buildAccountsUrl(c)
 
 	if err != nil {
-		logMsg(c.ClientConfig.ErrorLog, err.Error())
+		logMsg(c.ClientConfig.DebugLog, err.Error())
 		return false, err
 	}
 
