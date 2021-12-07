@@ -12,10 +12,14 @@ import (
 
 const accountsPath = "accounts"
 
+var defaultContext = context.Background()
+
+// CreateAccount Creates a new resource given the AccountData. Uses defaultContext as the context.
 func (c *OrganisationApiClient) CreateAccount(data AccountData) (*AccountData, error) {
-	return c.CreateAccountWithContext(data, context.Background())
+	return c.CreateAccountWithContext(data, defaultContext)
 }
 
+// CreateAccountWithContext Creates a new resource given the AccountData with the given context.
 func (c *OrganisationApiClient) CreateAccountWithContext(data AccountData, ctx context.Context) (*AccountData, error) {
 	requestUrl, err := buildAccountsUrl(c)
 
@@ -54,10 +58,12 @@ func (c *OrganisationApiClient) CreateAccountWithContext(data AccountData, ctx c
 	return fetchAccountDataFromBody(c, resp)
 }
 
+// FetchAccount Fetches the account given an id. Uses defaultContext as the context.
 func (c *OrganisationApiClient) FetchAccount(id string) (*AccountData, error) {
-	return c.FetchAccountWithContext(id, context.Background())
+	return c.FetchAccountWithContext(id, defaultContext)
 }
 
+// FetchAccountWithContext Fetches the account given an id and context.
 func (c *OrganisationApiClient) FetchAccountWithContext(id string, ctx context.Context) (*AccountData, error) {
 	requestUrl, err := buildAccountsUrl(c)
 
@@ -98,10 +104,12 @@ func (c *OrganisationApiClient) FetchAccountWithContext(id string, ctx context.C
 	return fetchAccountDataFromBody(c, resp)
 }
 
+// DeleteAccount Deletes account with given id and version. Uses defaultContext as the context.
 func (c *OrganisationApiClient) DeleteAccount(id string, version int) (bool, error) {
-	return c.DeleteAccountWithContext(id, version, context.Background())
+	return c.DeleteAccountWithContext(id, version, defaultContext)
 }
 
+// DeleteAccountWithContext Deletes account with given id, version and context.
 func (c *OrganisationApiClient) DeleteAccountWithContext(id string, version int, ctx context.Context) (bool, error) {
 	requestUrl, err := buildAccountsUrl(c)
 

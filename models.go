@@ -1,9 +1,11 @@
 package organisation_api
 
+// dataHolder Auxiliary struct for handling the responses and requests.
 type dataHolder struct {
 	Data AccountData `json:"data,omitempty"`
 }
 
+// AccountData Model representing an account in the server.
 type AccountData struct {
 	Attributes     *AccountAttributes `json:"attributes,omitempty"`
 	ID             string             `json:"id,omitempty"`
@@ -12,6 +14,7 @@ type AccountData struct {
 	Version        *int64             `json:"version,omitempty"`
 }
 
+// AccountAttributes Model representing the attributes of an account.
 type AccountAttributes struct {
 	AccountClassification   *string  `json:"account_classification,omitempty"`
 	AccountMatchingOptOut   *bool    `json:"account_matching_opt_out,omitempty"`

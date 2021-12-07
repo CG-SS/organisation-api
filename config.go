@@ -6,6 +6,7 @@ import (
 	"os"
 )
 
+// ClientConfig Struct representing the client config.
 type ClientConfig struct {
 	RootUrl        *url.URL
 	DebugLog       *log.Logger
@@ -21,12 +22,14 @@ var defaultRootUrl = func() *url.URL {
 	return d
 }()
 
+// DefaultConfig Default config with no logging or debugging.
 var DefaultConfig = &ClientConfig{
 	RootUrl:        defaultRootUrl,
 	DebugLog:       nil,
 	IsDebugEnabled: false,
 }
 
+// DebugConfig Config meant for debugging capabilities, with logging.
 var DebugConfig = &ClientConfig{
 	RootUrl:        defaultRootUrl,
 	DebugLog:       log.New(os.Stdout, "DEBUG\t", log.Ldate|log.Ltime),
