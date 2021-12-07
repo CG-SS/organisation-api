@@ -1,6 +1,7 @@
 package organisation_api
 
 import (
+	"context"
 	"encoding/json"
 	"io"
 	"log"
@@ -13,6 +14,17 @@ func logMsg(logger *log.Logger, msg ...interface{}) {
 	if logger != nil {
 		logger.Println(msg...)
 	}
+}
+
+func createRequest(ctx context.Context, method string, url url.URL, body io.Reader) (*http.Request, error) {
+	req, err := http.NewRequestWithContext(ctx, method, url.String(), body)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/json; charset=utf-8")
+	req.Header.Set("Accept", "application/json; charset=utf-8")
+
+	return req, err
 }
 
 func buildAccountsUrl(c *OrganisationApiClient) (*url.URL, error) {
