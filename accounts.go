@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"path"
@@ -15,12 +14,12 @@ const accountsPath = "accounts"
 var defaultContext = context.Background()
 
 // CreateAccount Creates a new resource given the AccountData. Uses defaultContext as the context.
-func (c *OrganisationApiClient) CreateAccount(data AccountData) (*AccountData, error) {
+func (c *OrganisationApiClient) CreateAccount(data AccountData) (*ClientResponse, error) {
 	return c.CreateAccountWithContext(data, defaultContext)
 }
 
 // CreateAccountWithContext Creates a new resource given the AccountData with the given context.
-func (c *OrganisationApiClient) CreateAccountWithContext(data AccountData, ctx context.Context) (*AccountData, error) {
+func (c *OrganisationApiClient) CreateAccountWithContext(data AccountData, ctx context.Context) (*ClientResponse, error) {
 	requestUrl, err := buildAccountsUrl(c)
 
 	if err != nil {
@@ -50,21 +49,35 @@ func (c *OrganisationApiClient) CreateAccountWithContext(data AccountData, ctx c
 	statusCode := resp.StatusCode
 	logMsg(c.ClientConfig.DebugLog, "Received status: ", resp.Status)
 	if statusCode != http.StatusCreated {
-		return nil, errors.New(fmt.Sprintf("Received status code %d!", statusCode))
+		return &ClientResponse{
+			Data:         nil,
+			ResponseCode: resp.StatusCode,
+			Success:      false,
+		}, nil
 	}
 
 	defer closeBody(resp.Body)
 
-	return fetchAccountDataFromBody(c, resp)
+	respData, err := fetchAccountDataFromBody(c, resp)
+	if err != nil {
+		logMsg(c.ClientConfig.DebugLog, err.Error())
+		return nil, err
+	}
+
+	return &ClientResponse{
+		Data:         respData,
+		ResponseCode: resp.StatusCode,
+		Success:      true,
+	}, nil
 }
 
 // FetchAccount Fetches the account given an id. Uses defaultContext as the context.
-func (c *OrganisationApiClient) FetchAccount(id string) (*AccountData, error) {
+func (c *OrganisationApiClient) FetchAccount(id string) (*ClientResponse, error) {
 	return c.FetchAccountWithContext(id, defaultContext)
 }
 
 // FetchAccountWithContext Fetches the account given an id and context.
-func (c *OrganisationApiClient) FetchAccountWithContext(id string, ctx context.Context) (*AccountData, error) {
+func (c *OrganisationApiClient) FetchAccountWithContext(id string, ctx context.Context) (*ClientResponse, error) {
 	requestUrl, err := buildAccountsUrl(c)
 
 	logMsg(c.ClientConfig.DebugLog, "Fetching msg", id)
@@ -96,26 +109,40 @@ func (c *OrganisationApiClient) FetchAccountWithContext(id string, ctx context.C
 	statusCode := resp.StatusCode
 	logMsg(c.ClientConfig.DebugLog, "Received status: ", resp.Status)
 	if statusCode != http.StatusOK {
-		return nil, errors.New(fmt.Sprintf("Received status code %d!", statusCode))
+		return &ClientResponse{
+			Data:         nil,
+			ResponseCode: resp.StatusCode,
+			Success:      false,
+		}, nil
 	}
 
 	defer closeBody(resp.Body)
 
-	return fetchAccountDataFromBody(c, resp)
+	respData, err := fetchAccountDataFromBody(c, resp)
+	if err != nil {
+		logMsg(c.ClientConfig.DebugLog, err.Error())
+		return nil, err
+	}
+
+	return &ClientResponse{
+		Data:         respData,
+		ResponseCode: resp.StatusCode,
+		Success:      true,
+	}, nil
 }
 
 // DeleteAccount Deletes account with given id and version. Uses defaultContext as the context.
-func (c *OrganisationApiClient) DeleteAccount(id string, version int) (bool, error) {
+func (c *OrganisationApiClient) DeleteAccount(id string, version int) (*ClientResponse, error) {
 	return c.DeleteAccountWithContext(id, version, defaultContext)
 }
 
 // DeleteAccountWithContext Deletes account with given id, version and context.
-func (c *OrganisationApiClient) DeleteAccountWithContext(id string, version int, ctx context.Context) (bool, error) {
+func (c *OrganisationApiClient) DeleteAccountWithContext(id string, version int, ctx context.Context) (*ClientResponse, error) {
 	requestUrl, err := buildAccountsUrl(c)
 
 	if err != nil {
 		logMsg(c.ClientConfig.DebugLog, err.Error())
-		return false, err
+		return nil, err
 	}
 	requestUrl.Path = path.Join(requestUrl.Path, id)
 	requestUrl.RawQuery = fmt.Sprintf("version=%d", version)
@@ -123,15 +150,19 @@ func (c *OrganisationApiClient) DeleteAccountWithContext(id string, version int,
 	req, err := createRequest(ctx, http.MethodDelete, *requestUrl, nil)
 	if err != nil {
 		logMsg(c.ClientConfig.DebugLog, err.Error())
-		return false, err
+		return nil, err
 	}
 
 	resp, err := c.Do(req)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	logMsg(c.ClientConfig.DebugLog, "Received status: ", resp.Status)
 
-	return resp.StatusCode == http.StatusNoContent, nil
+	return &ClientResponse{
+		Data:         nil,
+		ResponseCode: resp.StatusCode,
+		Success:      resp.StatusCode == http.StatusNoContent,
+	}, nil
 }
