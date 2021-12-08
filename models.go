@@ -7,9 +7,9 @@ type dataHolder struct {
 
 // ClientResponse Represents a response from the API client, not the API itself.
 type ClientResponse struct {
-	Data         *AccountData
-	ResponseCode int
-	Success      bool
+	Data       *AccountData
+	StatusCode int
+	Success    bool
 }
 
 // AccountData Model representing an account in the server.

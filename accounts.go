@@ -50,9 +50,9 @@ func (c *OrganisationApiClient) CreateAccountWithContext(data AccountData, ctx c
 	logMsg(c.ClientConfig.DebugLog, "Received status: ", resp.Status)
 	if statusCode != http.StatusCreated {
 		return &ClientResponse{
-			Data:         nil,
-			ResponseCode: resp.StatusCode,
-			Success:      false,
+			Data:       nil,
+			StatusCode: resp.StatusCode,
+			Success:    false,
 		}, nil
 	}
 
@@ -65,9 +65,9 @@ func (c *OrganisationApiClient) CreateAccountWithContext(data AccountData, ctx c
 	}
 
 	return &ClientResponse{
-		Data:         respData,
-		ResponseCode: resp.StatusCode,
-		Success:      true,
+		Data:       respData,
+		StatusCode: resp.StatusCode,
+		Success:    true,
 	}, nil
 }
 
@@ -110,9 +110,9 @@ func (c *OrganisationApiClient) FetchAccountWithContext(id string, ctx context.C
 	logMsg(c.ClientConfig.DebugLog, "Received status: ", resp.Status)
 	if statusCode != http.StatusOK {
 		return &ClientResponse{
-			Data:         nil,
-			ResponseCode: resp.StatusCode,
-			Success:      false,
+			Data:       nil,
+			StatusCode: resp.StatusCode,
+			Success:    false,
 		}, nil
 	}
 
@@ -125,9 +125,9 @@ func (c *OrganisationApiClient) FetchAccountWithContext(id string, ctx context.C
 	}
 
 	return &ClientResponse{
-		Data:         respData,
-		ResponseCode: resp.StatusCode,
-		Success:      true,
+		Data:       respData,
+		StatusCode: resp.StatusCode,
+		Success:    true,
 	}, nil
 }
 
@@ -161,8 +161,8 @@ func (c *OrganisationApiClient) DeleteAccountWithContext(id string, version int,
 	logMsg(c.ClientConfig.DebugLog, "Received status: ", resp.Status)
 
 	return &ClientResponse{
-		Data:         nil,
-		ResponseCode: resp.StatusCode,
-		Success:      resp.StatusCode == http.StatusNoContent,
+		Data:       nil,
+		StatusCode: resp.StatusCode,
+		Success:    resp.StatusCode == http.StatusNoContent,
 	}, nil
 }
