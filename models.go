@@ -5,6 +5,13 @@ type dataHolder struct {
 	Data AccountData `json:"data,omitempty"`
 }
 
+// ClientResponse Represents a response from the API client, not the API itself.
+type ClientResponse struct {
+	Data         AccountData
+	ResponseCode int
+	Success      bool
+}
+
 // AccountData Model representing an account in the server.
 type AccountData struct {
 	Attributes     *AccountAttributes `json:"attributes,omitempty"`
