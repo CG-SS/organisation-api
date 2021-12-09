@@ -2,6 +2,8 @@
 
 FROM golang:1.17-alpine
 
+RUN apk add build-base
+
 WORKDIR /app
 
 COPY go.mod ./
@@ -10,4 +12,6 @@ RUN go mod download
 
 COPY *.go ./
 
-RUN go test ./...
+EXPOSE 12345
+RUN go test -v
+

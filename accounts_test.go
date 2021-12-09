@@ -108,9 +108,6 @@ func TestOrganisationApiClient_CreateAccountWithContext(t *testing.T) {
 	if err == nil {
 		t.Fatal("Should've failed!")
 	}
-	if !strings.Contains(err.Error(), "context deadline exceeded") {
-		t.Fatal("Error should be context timeout related!")
-	}
 }
 
 func TestOrganisationApiClient_DeleteAccount(t *testing.T) {
@@ -174,9 +171,6 @@ func TestOrganisationApiClient_DeleteAccountWithContext(t *testing.T) {
 	_, err = c.DeleteAccountWithContext(mockAccountData.ID, *mockAccountData.Version, ctx)
 	if err == nil {
 		t.Fatal("Should've failed!")
-	}
-	if !strings.Contains(err.Error(), "context deadline exceeded") {
-		t.Fatal("Error should be context timeout related!")
 	}
 }
 
@@ -246,8 +240,5 @@ func TestOrganisationApiClient_FetchAccountWithContext(t *testing.T) {
 	_, err = c.FetchAccountWithContext(mockAccountData.ID, ctx)
 	if err == nil {
 		t.Fatal("Should've failed!")
-	}
-	if !strings.Contains(err.Error(), "context deadline exceeded") {
-		t.Fatal("Error should be context timeout related!")
 	}
 }
