@@ -132,12 +132,12 @@ func (c *OrganisationApiClient) FetchAccountWithContext(id string, ctx context.C
 }
 
 // DeleteAccount Deletes account with given id and version. Uses defaultContext as the context.
-func (c *OrganisationApiClient) DeleteAccount(id string, version int) (*ClientResponse, error) {
+func (c *OrganisationApiClient) DeleteAccount(id string, version int64) (*ClientResponse, error) {
 	return c.DeleteAccountWithContext(id, version, defaultContext)
 }
 
 // DeleteAccountWithContext Deletes account with given id, version and context.
-func (c *OrganisationApiClient) DeleteAccountWithContext(id string, version int, ctx context.Context) (*ClientResponse, error) {
+func (c *OrganisationApiClient) DeleteAccountWithContext(id string, version int64, ctx context.Context) (*ClientResponse, error) {
 	requestUrl, err := buildAccountsUrl(c)
 
 	if err != nil {
