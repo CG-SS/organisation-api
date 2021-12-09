@@ -12,6 +12,5 @@ RUN go mod download
 
 COPY *.go ./
 
-RUN go test -v
-RUN go test -v -tags=integration
+CMD go test -v && go test -v -tags=integration
 
