@@ -12,6 +12,6 @@ RUN go mod download
 
 COPY *.go ./
 
-EXPOSE 12345
 RUN go test -v
+RUN go test -v -tags=integration
 
