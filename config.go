@@ -14,6 +14,17 @@ type ClientConfig struct {
 }
 
 var defaultRootUrl = func() *url.URL {
+	s := os.Getenv("API_URL")
+
+	if s != "" {
+		d, err := url.Parse(s)
+		if err != nil {
+			panic(err)
+		}
+
+		return d
+	}
+
 	d, err := url.Parse("http://localhost:8080/v1/organisation/")
 	if err != nil {
 		panic(err)
