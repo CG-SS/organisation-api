@@ -159,6 +159,8 @@ func (c *OrganisationApiClient) DeleteAccountWithContext(id string, version int6
 	}
 
 	logMsg(c.ClientConfig.DebugLog, "Received status: ", resp.Status)
+	
+	defer closeBody(resp.Body)
 
 	return &ClientResponse{
 		Data:       nil,
